@@ -8,4 +8,4 @@ class User(AbstractUser):
     profile_pic = models.ImageField(upload_to="profile_pics/", blank=True, null=True)
     #admin function
     def str(self):
-        return self.username
+        return f'{self.email} Profil'
