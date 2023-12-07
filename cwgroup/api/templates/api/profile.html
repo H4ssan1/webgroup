@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang ="en">
+    <head>
+        {% block title %}Profile Page{% endblock title %}
+    </head>
+    <body>
+        {% block body %}
+            <div class="row my-3 p-3">
+                <h1>This is the profile page for {{profile.username}}</h1>
+            </div>
+            <ul>
+                <li>email: {{profile.email}}</li>
+                <li>date of birth: {{profile.date_of_birth}}</li>
+            </ul>
+            <div>
+                
+            </div>
+        {% endblock %}
+    </body>
+</html>
+
+
+    
+
