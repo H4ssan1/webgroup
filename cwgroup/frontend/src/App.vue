@@ -1,18 +1,17 @@
 <template>
     <main class="container pt-4">
         <div>
-            <router-link
-                class=""
-                :to="{name: 'Main Page'}"
-            >
+            <router-link class="" :to="{ name: 'Main Page' }">
                 Main Page
             </router-link>
             |
-            <router-link
-                class=""
-                :to="{name: 'Other Page'}"
-            >
+            <router-link class="" :to="{ name: 'Other Page' }">
                 Other Page
+            </router-link>
+        </div>
+        <div class="position-absolute top-0 end-0">
+            <router-link class="" :to="{ name: 'Profile Page' }">
+                Profile Page
             </router-link>
         </div>
         <RouterView class="flex-shrink-0" />
@@ -29,5 +28,4 @@ export default defineComponent({
 
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
