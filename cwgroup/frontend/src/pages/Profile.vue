@@ -3,7 +3,7 @@
 
         <div>profile image</div>
         <div>
-            <h1>Name</h1>
+            <h1>{{ userStore.user.name }}</h1>
         </div>
         <div>
             favourite News categories:
@@ -24,6 +24,7 @@
 
 <script lang="ts">
 import { defineComponent, } from "vue";
+import { useUserStore } from "../userStore";
 
 export default defineComponent({
     data() {
@@ -31,6 +32,10 @@ export default defineComponent({
             title: "Profile Page",
         };
     },
+    setup() {
+        const userStore = useUserStore();
+        return { userStore };
+    }
 })
 </script>
 
