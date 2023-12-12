@@ -18,9 +18,23 @@ from django.contrib import admin
 from django.urls import include, path
 from django.http import HttpResponse
 
-from .views import main_spa, profile
+from .views import main_spa, home
+from .views import MyLoginView, RegisterView, MyProfile #, profile
+
+
+
+from django.contrib.auth.views import (
+    LogoutView, 
+)
+
 
 urlpatterns = [
-    path('', main_spa),
-    path('profile/<int:profile_id>', profile)
+    path('login/', MyLoginView.as_view(redirect_authenticated_user=True),name='login'),
+    path('logout/', LogoutView.as_view(next_page='login'),name='logout'),
+    path('register/', RegisterView.as_view(),name='register'),
+    #path('', main_spa),
+    path('profile/', MyProfile.as_view(), name='profile'),
+    #path('profile/update/', post_save, name='update'),
+    path('', home, name='home'),
+    
 ]

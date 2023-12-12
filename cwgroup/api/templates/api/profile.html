@@ -1,23 +1,36 @@
-<!DOCTYPE html>
-<html lang ="en">
-    <head>
-        {% block title %}Profile Page{% endblock title %}
-    </head>
-    <body>
-        {% block body %}
-            <div class="row my-3 p-3">
-                <h1>This is the profile page for {{profile.username}}</h1>
-            </div>
-            <ul>
-                <li>email: {{profile.email}}</li>
-                <li>date of birth: {{profile.date_of_birth}}</li>
-            </ul>
-            <div>
-                <img src="{{ profile.profile_pic.url }}">
-            </div>
-        {% endblock %}
-    </body>
-</html>
+{% extends 'layout.html' %} 
+
+{% block content %}
+
+
+<div class="center">
+	<form method="POST" enctype="multipart/form-data" class="card">
+		{% csrf_token %} 
+		
+	    {% if user.profile %}
+			<img src="{{user.profile.profile_pic.url}}" alt="{{ user.username }}" class="profile_pic" accept=".jpg,.jpeg,.png"/>
+	    {% endif %}
+	    
+	    <h2 class="text-center">{{ user.username | title }}</h2>
+	    <p class="text-center"><a href="mailto:{{user.email}}">{{user.email}}</a></p>
+   	    <hr>
+		
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" value="{{user.email}}" />
+            <label for="date_of_birth">Date Of Birth</label>
+            <input type="date" id="date_of_birth" name="date_of_birth" value="{{user.date_of_birth}}"/>
+			
+		
+		<label for="profile_pic">Profile Pic:</label>
+		<input type="file" name="profile_pic" id="profile_pic">	
+		<hr>
+		
+	    <button type="submit" class="btn btn-primary full-width">Update Profile</button>
+	
+	</form>
+</div>
+
+{% endblock content %}
 
 
     
