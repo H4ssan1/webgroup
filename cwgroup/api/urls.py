@@ -33,9 +33,10 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page='login'),name='logout'),
     path('register/', RegisterView.as_view(),name='register'),
     #path('', main_spa),
-    path('profile/', MyProfile.as_view(), name='profile'),
+    path('profile_backend/', MyProfile.as_view(), name='profile'),
     #path('profile/update/', post_save, name='update'),
-    path('', home, name='home'),
-    path('vue/',views.serve_vue_app, name='serve_vue_app'),
+    path('home/', home, name='home'),
+    path('',views.serve_vue_app, name='serve_vue_app'),
+    path('user_data/',views.user_details, name='user_details'),
     
 ]

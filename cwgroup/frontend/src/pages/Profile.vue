@@ -1,9 +1,10 @@
 <template>
     <div>
 
-        <div>profile image</div>
+        <div>profile image1</div>
+        <img :src="userStore.profilePic" alt="Profile Picture" />
         <div>
-            <h1>{{ userStore.user.name }}</h1>
+            <h1>{{ userStore.username }}</h1>
         </div>
         <div>
             favourite News categories:
@@ -23,7 +24,7 @@
 
 
 <script lang="ts">
-import { defineComponent, } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useUserStore } from "../userStore";
 
 export default defineComponent({
@@ -34,6 +35,12 @@ export default defineComponent({
     },
     setup() {
         const userStore = useUserStore();
+
+        onMounted(async () => {
+            await userStore.fetchUserDetails();
+            // You can handle any post-fetch logic here if needed
+        });
+
         return { userStore };
     }
 })

@@ -25,7 +25,7 @@ class RegisterView(FormView):
     template_name = 'api/register.html'
     form_class = RegisterForm
     redirect_authenticated_user = True
-    success_url = reverse_lazy('profile')
+    success_url = reverse_lazy('serve_vue_app')
     
     def form_valid(self, form):
         user = form.save()
@@ -90,7 +90,7 @@ def home(request):
     return render(request,'home.html')
 
 
-
+@login_required
 def serve_vue_app(request):
         # This path should be to the 'index.html' inside your 'api/static/api/spa' directory.
         index_file_path = os.path.join(settings.BASE_DIR, 'api', 'static', 'api', 'spa', 'index.html')
@@ -102,3 +102,19 @@ def serve_vue_app(request):
                 "The Vue.js app was not found. Have you run 'npm run build'?",
                 status=404
             )
+        
+
+
+
+
+@login_required
+def user_details(request):
+    user = request.user
+    data = {
+        'username': user.username,
+        'email': user.email,
+        # Add additional fields as necessary
+        'date_of_birth': user.profile.date_of_birth,  # Assuming date_of_birth is a field on Profile
+        'profile_image': user.profile.profile_pic.url if user.profile.profile_pic else None,  # Assuming profile_image is a ImageField on Profile
+    }
+    return JsonResponse(data)

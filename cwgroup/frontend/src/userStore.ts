@@ -1,8 +1,33 @@
-import { defineStore } from 'pinia';
+// userStore.ts
+import { defineStore } from 'pinia'
 
-export const useUserStore = defineStore('userStore', {
+export const useUserStore = defineStore({
+    id: 'user',
     state: () => ({
-        user: { id: 1, name: 'John', username: 'John123', email: 'john123@gmail.com', dob: '01/01/1990' },
-    })
-
-})
+        username: '',
+        email: '',
+        dob: '',
+        profilePic: '',
+    }),
+    actions: {
+        fetchUserDetails() {
+            fetch('http://127.0.0.1:8000/user_data/', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Credentials': 'include',  // Necessary for session cookies if using Django's session auth
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    this.username = data.username;
+                    this.email = data.email;
+                    this.dob = data.date_of_birth;
+                    this.profilePic = data.profile_image;
+                })
+                .catch(error => {
+                    console.error('Error fetching user details:', error);
+                });
+        }
+    }
+});

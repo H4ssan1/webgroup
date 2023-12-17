@@ -20,7 +20,7 @@ class Profile(models.Model):
 
     
     date_of_birth = models.DateField(blank=True, default=datetime.datetime.now)
-    profile_pic = models.ImageField(upload_to="profile_pic/")
+    profile_pic = models.ImageField(upload_to="profile_pic/", default="profile_pic/default.png")
     
 
     def __str__(self):
