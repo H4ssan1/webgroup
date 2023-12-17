@@ -90,8 +90,8 @@ def home(request):
     return render(request,'home.html')
 
 
-class vue_app(LoginRequiredMixin):
-    def serve_vue_app(request):
+
+def serve_vue_app(request):
         # This path should be to the 'index.html' inside your 'api/static/api/spa' directory.
         index_file_path = os.path.join(settings.BASE_DIR, 'api', 'static', 'api', 'spa', 'index.html')
         try:
