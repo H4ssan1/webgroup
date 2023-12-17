@@ -21,7 +21,7 @@ from django.http import HttpResponse
 from .views import main_spa, home
 from .views import MyLoginView, RegisterView, MyProfile #, profile
 
-
+from . import views
 
 from django.contrib.auth.views import (
     LogoutView, 
@@ -36,5 +36,6 @@ urlpatterns = [
     path('profile/', MyProfile.as_view(), name='profile'),
     #path('profile/update/', post_save, name='update'),
     path('', home, name='home'),
+    path('vue/',views.serve_vue_app, name='serve_vue_app'),
     
 ]

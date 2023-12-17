@@ -14,6 +14,10 @@ from django.shortcuts import render, redirect
 from .forms import RegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.views import View
 
+import os
+from django.conf import settings
+
+
 def main_spa(request: HttpRequest) -> HttpResponse:
     return render(request, 'api/spa/index.html', {})
 
@@ -36,7 +40,7 @@ class MyLoginView(LoginView):
     redirect_authenticated_user = True
     
     def get_success_url(self):
-        return reverse_lazy('profile') 
+        return reverse_lazy('serve_vue_app') 
     
     def form_invalid(self, form):
         messages.error(self.request,'Invalid username or password')
@@ -81,19 +85,20 @@ class MyProfile(LoginRequiredMixin, View):
             messages.error(request, 'Error updating profile')
 
             return render(request, 'api/profile.html', context)
-    
-    def delete_profile(self, request):
-        user_form = UserUpdateForm(
-            request.DELETE,
-            instance= request.user.profile
-        )
-        profile_form = ProfileUpdateForm(
-            request.DELETE,
-            instance= request.user.profile
-        )
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.delete()
-            profile_form.save()
         
 def home(request):
     return render(request,'home.html')
+
+
+class vue_app(LoginRequiredMixin):
+    def serve_vue_app(request):
+        # This path should be to the 'index.html' inside your 'api/static/api/spa' directory.
+        index_file_path = os.path.join(settings.BASE_DIR, 'api', 'static', 'api', 'spa', 'index.html')
+        try:
+            with open(index_file_path, 'r') as file:
+                return HttpResponse(file.read(), content_type='text/html')
+        except FileNotFoundError:
+            return HttpResponse(
+                "The Vue.js app was not found. Have you run 'npm run build'?",
+                status=404
+            )
