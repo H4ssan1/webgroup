@@ -1,37 +1,34 @@
 <template>
   <div>
-    <h1>News</h1>
-
-    <div v-for="article in articleStore.articles">
-      <h2>{{ article.category }}</h2>
-
-
-      {{ article.image }}
-      <br>
-      {{ article.text }}
-      <br>
-      {{ article.id }}
-      <br>
-      {{ article.category }}
+    <h1>News Articles</h1>
+    <div v-if="loading">Loading articles...</div>
+    <div v-else>
+      <div v-for="(id, index) in articleStore.ids" :key="id">
+        <h2>{{ articleStore.titles[index] }}</h2>
+        <p>{{ articleStore.contents[index] }}</p>
+        <p>Category: {{ articleStore.categories[index] }}</p>
+      </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { useArticleStore } from "../articleStore"
+<script lang = "ts">
+import { defineComponent, ref, onMounted } from 'vue';
+import { useArticleStore } from '../articleStore';
 
 export default defineComponent({
-  data() {
-    return {
-      title: "Main Page",
-    }
-  },
+  name: 'ArticleList',
+
   setup() {
     const articleStore = useArticleStore();
-    return { articleStore };
-  }
-})
-</script>
+    const loading = ref(true);
 
-<style scoped></style>
+    onMounted(async () => {
+      await articleStore.fetchArticles();
+      loading.value = false;
+    });
+
+    return { articleStore, loading };
+  }
+});
+</script>

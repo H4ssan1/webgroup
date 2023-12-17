@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render
-from .models import User, Profile
+from .models import User, Profile, NewsArticle
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -104,9 +104,6 @@ def serve_vue_app(request):
             )
         
 
-
-
-
 @login_required
 def user_details(request):
     user = request.user
@@ -116,5 +113,10 @@ def user_details(request):
         # Add additional fields as necessary
         'date_of_birth': user.profile.date_of_birth,  # Assuming date_of_birth is a field on Profile
         'profile_image': user.profile.profile_pic.url if user.profile.profile_pic else None,  # Assuming profile_image is a ImageField on Profile
+        
     }
     return JsonResponse(data)
+
+def list_news_articles(request):
+    articles = NewsArticle.objects.all().values('id', 'title', 'content', 'category__name')
+    return JsonResponse(list(articles), safe=False)

@@ -38,5 +38,6 @@ urlpatterns = [
     path('home/', home, name='home'),
     path('',views.serve_vue_app, name='serve_vue_app'),
     path('user_data/',views.user_details, name='user_details'),
+    path('articles/', views.list_news_articles, name='articles'),
     
 ]
