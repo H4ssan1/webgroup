@@ -7,13 +7,15 @@
         <h2>{{ articleStore.titles[index] }}</h2>
         <p>{{ articleStore.contents[index] }}</p>
         <p>Category: {{ articleStore.categories[index] }}</p>
-        <h2>{{ articleStore.comment_contents[id] }}</h2>
-        <!-- Use the article's id to access its comments -->
-        
+        <h3>Comments:</h3>
+        <div v-if="articleStore.comment_contents[id] && articleStore.comment_user[id]">
+          <div v-for="(comment, index) in articleStore.comment_contents[id]" :key="index">
+            <div>
+              <p>{{ articleStore.comment_user[id][index]}}: {{ comment }}</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <!--  <div v-for="(id, index) in articleStore.comment_ids" :key="id">
-        
-      </div>-->
     </div>
   </div>
 </template>

@@ -9,7 +9,7 @@ export const useArticleStore = defineStore('articleStore', {
     comment_ids: {} as Record<number, Comment[]>,
     comment_contents: {} as Record<number, Comment[]>,
     comment_user: {} as Record<number, Comment[]>,
-    //comments: {} as Record<number, Comment[]>,
+    comment_parent: {} as Record<number, Comment[]>,
   }),
   actions: {
     async fetchArticles() {
@@ -19,7 +19,6 @@ export const useArticleStore = defineStore('articleStore', {
           throw new Error('Network response was not ok');
         }
         const articles = await response.json();
-
         this.ids = articles.map((article: { id: any; }) => article.id);
         this.titles = articles.map((article: { title: any; }) => article.title);
         this.contents = articles.map((article: { content: any; }) => article.content);
@@ -38,8 +37,7 @@ export const useArticleStore = defineStore('articleStore', {
         this.comment_ids[articleId]= comments.map((comment: { id: any; }) => comment.id);
         this.comment_contents[articleId] = comments.map((comment: { content: any; }) => comment.content);
         this.comment_user[articleId] = comments.map((comment: { user: any; }) => comment.user);
-        
-        //this.comments[articleId] = comments; // Store the comments in the state
+        this.comment_parent[articleId] = comments.map((comment: { parent: any}) => comment.parent);
       } catch (error) {
         console.error('Error fetching comments:', error);
       }

@@ -52,4 +52,4 @@ class Comment(models.Model):
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.content
+        return f'{self.user}: {self.content}'
