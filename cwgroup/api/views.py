@@ -1,6 +1,7 @@
-from django.http import HttpResponse, HttpRequest, JsonResponse
+import json
+from django.http import HttpResponse, HttpRequest, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
-from .models import User, Profile, NewsArticle
+from .models import *
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -9,8 +10,9 @@ from django.views.generic.edit import FormView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
+from django.views.decorators.csrf import csrf_exempt
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.views import View
 
@@ -120,3 +122,61 @@ def user_details(request):
 def list_news_articles(request):
     articles = NewsArticle.objects.all().values('id', 'title', 'content', 'category__name')
     return JsonResponse(list(articles), safe=False)
+
+
+@login_required
+def add_comment(request, article_id):
+    article = get_object_or_404(NewsArticle, pk=article_id)
+    content = request.POST.get('content')
+    parent_id = request.POST.get('parent_id')  # For replies to other comments
+
+    parent_comment = None
+    if parent_id:
+        parent_comment = get_object_or_404(Comment, pk=parent_id)
+
+    comment = Comment.objects.create(
+        article=article, 
+        user=request.user, 
+        content=content,
+        parent=parent_comment
+    )
+    return JsonResponse({'message': 'Comment added successfully', 'comment_id': comment.id})
+
+@login_required
+@csrf_exempt
+def edit_comment(request, comment_id):
+    try:
+        data = json.loads(request.body)
+        content = data.get('content')
+        if not content:
+            return HttpResponseBadRequest('Content is required.')
+
+        comment = get_object_or_404(Comment, pk=comment_id, user=request.user)
+        comment.content = content
+        comment.save()
+        return JsonResponse({'message': 'Comment updated successfully'})
+    except json.JSONDecodeError:
+        return HttpResponseBadRequest('Invalid JSON')
+
+@login_required
+@csrf_exempt
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id, user=request.user)
+    comment.delete()
+    return JsonResponse({'message': 'Comment deleted successfully'})
+
+@login_required
+def get_comment(request, article_id):
+    article = get_object_or_404(NewsArticle, pk=article_id)
+
+    comments = Comment.objects.filter(article=article).order_by('-created_at')  # Assuming you want the newest comments first
+
+    comments_data = [{
+        'id': comment.id,
+        'user': comment.user.username,
+        'content': comment.content,
+        'created_at': comment.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+        'parent_id': comment.parent.id if comment.parent else None
+    } for comment in comments]
+
+    return JsonResponse(comments_data, safe=False)

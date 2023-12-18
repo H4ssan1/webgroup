@@ -50,3 +50,6 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     # Self-referential field to handle replies
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.content

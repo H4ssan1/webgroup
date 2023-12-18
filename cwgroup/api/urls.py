@@ -32,12 +32,13 @@ urlpatterns = [
     path('login/', MyLoginView.as_view(redirect_authenticated_user=True),name='login'),
     path('logout/', LogoutView.as_view(next_page='login'),name='logout'),
     path('register/', RegisterView.as_view(),name='register'),
-    #path('', main_spa),
     path('profile_backend/', MyProfile.as_view(), name='profile'),
-    #path('profile/update/', post_save, name='update'),
     path('home/', home, name='home'),
     path('',views.serve_vue_app, name='serve_vue_app'),
     path('user_data/',views.user_details, name='user_details'),
     path('articles/', views.list_news_articles, name='articles'),
-    
+    path('article/<int:article_id>/add-comment/', views.add_comment, name='add_comment'),
+    path('comment/<int:comment_id>/edit/', views.edit_comment, name='edit_comment'),
+    path('comment/<int:comment_id>/delete/', views.delete_comment, name='delete_comment'),
+    path('article/<int:article_id>/comments/', views.get_comment, name='get_comments'),
 ]
