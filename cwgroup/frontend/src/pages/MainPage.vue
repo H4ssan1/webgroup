@@ -11,7 +11,8 @@
         <div v-if="articleStore.comment_contents[id] && articleStore.comment_user[id]">
           <div v-for="(comment, index) in articleStore.comment_contents[id]" :key="index">
             <div>
-              <p>{{ articleStore.comment_user[id][index]}}: {{ comment }}</p>
+              <p> {{ articleStore.comment_user[id][index] }}:{{ comment }}
+              </p>
             </div>
           </div>
         </div>

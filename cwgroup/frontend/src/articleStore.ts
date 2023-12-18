@@ -37,7 +37,7 @@ export const useArticleStore = defineStore('articleStore', {
         this.comment_ids[articleId]= comments.map((comment: { id: any; }) => comment.id);
         this.comment_contents[articleId] = comments.map((comment: { content: any; }) => comment.content);
         this.comment_user[articleId] = comments.map((comment: { user: any; }) => comment.user);
-        this.comment_parent[articleId] = comments.map((comment: { parent: any}) => comment.parent);
+        this.comment_parent[articleId] = comments.map((comment: { parent_id: any}) => comment.parent_id);
       } catch (error) {
         console.error('Error fetching comments:', error);
       }
