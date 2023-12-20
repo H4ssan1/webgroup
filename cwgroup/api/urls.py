@@ -37,8 +37,9 @@ urlpatterns = [
     path('',views.serve_vue_app, name='serve_vue_app'),
     path('user_data/',views.user_details, name='user_details'),
     path('articles/', views.list_news_articles, name='articles'),
-    path('article/<int:article_id>/add-comment/', views.add_comment, name='add_comment'),
+    path('article/<int:article_id>/add_comment/', views.add_comment, name='add_comment'),
     path('comment/<int:comment_id>/edit/', views.edit_comment, name='edit_comment'),
     path('comment/<int:comment_id>/delete/', views.delete_comment, name='delete_comment'),
     path('article/<int:article_id>/comments/', views.get_comment, name='get_comments'),
+    path('update_user/', views.updateUser, name='update_user'),
 ]

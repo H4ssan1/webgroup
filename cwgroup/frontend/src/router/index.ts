@@ -8,6 +8,7 @@ import MainPage from '../pages/MainPage.vue';
 import OtherPage from '../pages/OtherPage.vue';
 import Profile from '../pages/Profile.vue';
 
+
 let base = (import.meta.env.MODE == 'development') ? import.meta.env.BASE_URL : ''
 
 // 2. Define some routes

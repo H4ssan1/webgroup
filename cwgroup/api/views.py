@@ -115,6 +115,7 @@ def user_details(request):
         # Add additional fields as necessary
         'date_of_birth': user.profile.date_of_birth,  # Assuming date_of_birth is a field on Profile
         'profile_image': user.profile.profile_pic.url if user.profile.profile_pic else None,  # Assuming profile_image is a ImageField on Profile
+        'id' : user.profile.id,
         
     }
     return JsonResponse(data)
@@ -125,10 +126,14 @@ def list_news_articles(request):
 
 
 @login_required
+@csrf_exempt
 def add_comment(request, article_id):
     article = get_object_or_404(NewsArticle, pk=article_id)
-    content = request.POST.get('content')
-    parent_id = request.POST.get('parent_id')  # For replies to other comments
+
+    # Parse JSON data from the request body
+    data = json.loads(request.body)
+    content = data.get('content')
+    parent_id = data.get('parent_id')
 
     parent_comment = None
     if parent_id:
@@ -140,6 +145,7 @@ def add_comment(request, article_id):
         content=content,
         parent=parent_comment
     )
+
     return JsonResponse({'message': 'Comment added successfully', 'comment_id': comment.id})
 
 @login_required
@@ -180,3 +186,21 @@ def get_comment(request, article_id):
     } for comment in comments]
 
     return JsonResponse(comments_data, safe=False)
+
+
+
+
+@login_required
+@csrf_exempt
+def updateUser(request):
+    user = request.user
+    profile = user.profile
+    data = json.loads(request.body)
+    user.email = data['email']
+    profile.date_of_birth = data['date_of_birth']
+    #profile.fav_categories.set(data['fav_categories'])
+    #profile.profile_pic = data['profile_pic']
+        # Handle profile_pic upload if necessary
+    user.save()
+    profile.save()
+    return JsonResponse({'status': 'success'})
