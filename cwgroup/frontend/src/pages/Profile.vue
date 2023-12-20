@@ -15,33 +15,69 @@
             <label for="finance">finance</label><br>
             <input type="checkbox" id="World" name="World" value="World">
             <label for="World">World</label><br>
+            {{ email }}
+            {{ dob }}
+            <button @click="toggleEdit">Edit</button>
+            <div v-if="editing">
+
+                <form @submit.prevent>
+                    <input type="email" v-model="email">
+                    <input type="date" v-model="dob">
+                    <button @click="updateUser">Update</button>
+                </form>
+            </div>
         </div>
-
-
-
     </div>
 </template>
 
 
 <script lang="ts">
-import { defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import { useUserStore } from "../userStore";
 
 export default defineComponent({
-    data() {
-        return {
-            title: "Profile Page",
-        };
-    },
+
     setup() {
         const userStore = useUserStore();
+        const editing = ref(false);
+
 
         onMounted(async () => {
             await userStore.fetchUserDetails();
             // You can handle any post-fetch logic here if needed
         });
+        const email = ref(userStore.email);
+        const dob = ref(userStore.dob);
+        const toggleEdit = () => {
+            editing.value = !editing.value;
 
-        return { userStore };
+        }
+
+        const updateUser = async () => {
+            toggleEdit();
+            try {
+                const response = await fetch('http://127.0.0.1:8000/update_user/', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email.value,
+                        date_of_birth: dob.value,
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+            } catch (error) {
+                console.error('There was an issue updating user:', error);
+            }
+            userStore.fetchUserDetails();
+        };
+
+
+        return { userStore, email, dob, updateUser, editing, toggleEdit };
     }
 })
 </script>
