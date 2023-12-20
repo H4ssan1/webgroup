@@ -17,12 +17,15 @@
             <label for="World">World</label><br>
             {{ email }}
             {{ dob }}
+            <button @click="toggleEdit">Edit</button>
+            <div v-if="editing">
 
-            <form @submit.prevent>
-                <input type="email" v-model="email">
-                <input type="date" v-model="dob">
-                <button @click="updateUser">Update</button>
-            </form>
+                <form @submit.prevent>
+                    <input type="email" v-model="email">
+                    <input type="date" v-model="dob">
+                    <button @click="updateUser">Update</button>
+                </form>
+            </div>
         </div>
     </div>
 </template>
@@ -36,6 +39,8 @@ export default defineComponent({
 
     setup() {
         const userStore = useUserStore();
+        const editing = ref(false);
+
 
         onMounted(async () => {
             await userStore.fetchUserDetails();
@@ -43,7 +48,13 @@ export default defineComponent({
         });
         const email = ref(userStore.email);
         const dob = ref(userStore.dob);
+        const toggleEdit = () => {
+            editing.value = !editing.value;
+
+        }
+
         const updateUser = async () => {
+            toggleEdit();
             try {
                 const response = await fetch('http://127.0.0.1:8000/update_user/', {
                     method: 'PUT',
@@ -62,10 +73,11 @@ export default defineComponent({
             } catch (error) {
                 console.error('There was an issue updating user:', error);
             }
+            userStore.fetchUserDetails();
         };
 
 
-        return { userStore, email, dob, updateUser };
+        return { userStore, email, dob, updateUser, editing, toggleEdit };
     }
 })
 </script>
