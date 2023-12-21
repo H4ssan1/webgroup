@@ -5,7 +5,6 @@ from django.db.models.signals import post_save
 import datetime
 
 
-# Create your models here.
 class User(AbstractUser):
     username = models.CharField(max_length=50)
     email = models.CharField(unique= True, max_length=50)
@@ -48,7 +47,7 @@ class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    # Self-referential field to handle replies
+   
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):

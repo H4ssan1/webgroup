@@ -94,7 +94,7 @@ def home(request):
 
 @login_required
 def serve_vue_app(request):
-        # This path should be to the 'index.html' inside your 'api/static/api/spa' directory.
+      
         index_file_path = os.path.join(settings.BASE_DIR, 'api', 'static', 'api', 'spa', 'index.html')
         try:
             with open(index_file_path, 'r') as file:
@@ -112,9 +112,9 @@ def user_details(request):
     data = {
         'username': user.username,
         'email': user.email,
-        # Add additional fields as necessary
-        'date_of_birth': user.profile.date_of_birth,  # Assuming date_of_birth is a field on Profile
-        'profile_image': user.profile.profile_pic.url if user.profile.profile_pic else None,  # Assuming profile_image is a ImageField on Profile
+        
+        'date_of_birth': user.profile.date_of_birth,  
+        'profile_image': user.profile.profile_pic.url if user.profile.profile_pic else None,  
         'id' : user.profile.id,
         
     }
@@ -130,7 +130,7 @@ def list_news_articles(request):
 def add_comment(request, article_id):
     article = get_object_or_404(NewsArticle, pk=article_id)
 
-    # Parse JSON data from the request body
+   
     data = json.loads(request.body)
     content = data.get('content')
     parent_id = data.get('parent_id')
@@ -175,7 +175,7 @@ def delete_comment(request, comment_id):
 def get_comment(request, article_id):
     article = get_object_or_404(NewsArticle, pk=article_id)
 
-    comments = Comment.objects.filter(article=article).order_by('-created_at')  # Assuming you want the newest comments first
+    comments = Comment.objects.filter(article=article).order_by('-created_at')  
 
     comments_data = [{
         'id': comment.id,
@@ -198,9 +198,25 @@ def updateUser(request):
     data = json.loads(request.body)
     user.email = data['email']
     profile.date_of_birth = data['date_of_birth']
-    #profile.fav_categories.set(data['fav_categories'])
-    #profile.profile_pic = data['profile_pic']
-        # Handle profile_pic upload if necessary
     user.save()
     profile.save()
     return JsonResponse({'status': 'success'})
+
+@login_required
+@csrf_exempt
+def update_profile_pic(request):
+    
+
+    user = request.user
+    try:
+        profile = Profile.objects.get(user=user)
+    except Profile.DoesNotExist:
+        return JsonResponse({'error': 'User profile not found'}, status=404)
+
+    profile_pic = request.FILES.get('profile_pic')
+    if not profile_pic:
+        return JsonResponse({'error': 'No image provided'}, status=400)
+
+    profile.profile_pic = profile_pic
+    profile.save()
+    return JsonResponse({'message': 'Profile picture updated successfully'}, status=200)
