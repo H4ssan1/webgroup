@@ -36,8 +36,7 @@ export default defineComponent({
 
                 const result = await response.json();
                 console.log(result.message);
-                // Handle success - maybe clear the comment field or update UI
-                con.value = "";  // Clear the input field after posting
+                con.value = "";
             } catch (error) {
                 console.error('There was an issue posting the comment:', error);
             }
