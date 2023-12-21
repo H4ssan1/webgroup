@@ -31,14 +31,14 @@ export default defineComponent({
                 });
 
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Error mate');
                 }
 
                 const result = await response.json();
                 console.log(result.message);
                 con.value = "";
             } catch (error) {
-                console.error('There was an issue posting the comment:', error);
+                console.error('There was an issue posting the comment', error);
             }
         };
         return { con, editComment }

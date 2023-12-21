@@ -22,7 +22,7 @@ export const useArticleStore = defineStore('articleStore', {
       try {
         const response = await fetch('http://127.0.0.1:8000/articles/');
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('Error mate');
         }
         const articles = await response.json();
         this.ids = articles.map((article: { id: number }) => article.id);
@@ -30,14 +30,14 @@ export const useArticleStore = defineStore('articleStore', {
         this.contents = articles.map((article: { content: string }) => article.content);
         this.categories = articles.map((article: { category__name: string }) => article.category__name);
       } catch (error) {
-        console.error('Error fetching articles:', error);
+        console.error('Error fetching articles', error);
       }
     },
     async fetchComments(articleId: number) {
       try {
         const response = await fetch(`http://127.0.0.1:8000/article/${articleId}/comments/`);
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('Error mate');
         }
         const comments = await response.json();
         this.comments[articleId] = this.formatComments(comments);

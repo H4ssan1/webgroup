@@ -4,10 +4,6 @@
             <router-link class="" :to="{ name: 'Main Page' }">
                 Main Page
             </router-link>
-            |
-            <router-link class="" :to="{ name: 'Other Page' }">
-                Other Page
-            </router-link>
         </div>
         <div class="position-absolute top-0 end-0">
             <router-link class="" :to="{ name: 'Profile Page' }">

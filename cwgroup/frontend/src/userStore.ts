@@ -42,7 +42,7 @@ export const useUserStore = defineStore({
             })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Failed to update favorite categories');
+                        throw new Error('Failed to update fav categories');
                     }
                     return response.json();
                 })
@@ -51,7 +51,7 @@ export const useUserStore = defineStore({
                     console.log(data.message);
                 })
                 .catch(error => {
-                    console.error('Error updating favorite categories:', error);
+                    console.error('Error updating favorites', error);
                 });
         },
     }

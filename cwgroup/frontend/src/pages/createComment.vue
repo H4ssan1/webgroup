@@ -28,7 +28,7 @@ export default defineComponent({
                 });
 
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Error mate');
                 }
 
                 const result = await response.json();

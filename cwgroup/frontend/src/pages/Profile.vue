@@ -1,5 +1,6 @@
 <template>
     <div>
+        <button @click="Logout">Logout</button>
         <img :src="userStore.profilePic">
     </div>
     <div>{{ userStore.email }}</div>
@@ -39,7 +40,7 @@ export default defineComponent({
         const editing = ref(false);
         const email = ref(userStore.email);
         const dob = ref(userStore.dob);
-        const allCategories = ref(['Sports', 'World', 'Finance']);
+        const allCategories = ref(['Sports', 'World', 'Finance', 'Fashion', 'Health']);
         const selectedCategories = ref(userStore.favCategories);
 
         onMounted(async () => {
@@ -51,7 +52,10 @@ export default defineComponent({
         const toggleEdit = () => {
             editing.value = !editing.value;
         };
-
+        const Logout = async () => {
+            await fetch('http://127.0.0.1:8000/logout/',{});
+            window.location.href = '/login/'; 
+        };
         const updateUser = async () => {
             toggleEdit();
             try {
@@ -67,7 +71,7 @@ export default defineComponent({
                 });
 
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Error mate');
                 }
             } catch (error) {
                 console.error('There was an issue updating user:', error);
@@ -117,6 +121,7 @@ export default defineComponent({
             allCategories,
             selectedCategories,
             updateFavCategories,
+            Logout,
         };
     },
 });
