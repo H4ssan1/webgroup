@@ -15,7 +15,7 @@ export const useUserStore = defineStore({
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Credentials': 'include',  // Necessary for session cookies if using Django's session auth
+                    'Credentials': 'include',
                 }
             })
                 .then(response => response.json())

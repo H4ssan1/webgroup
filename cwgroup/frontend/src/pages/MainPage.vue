@@ -67,7 +67,6 @@ export default defineComponent({
     const userStore = useUserStore();
     onMounted(async () => {
       await userStore.fetchUserDetails();
-      // You can handle any post-fetch logic here if needed
     });
     console.log(userStore.username);
 
@@ -124,8 +123,8 @@ export default defineComponent({
 
 <style scoped>
 .replies {
-  margin-left: 20px;
-  border-left: 2px solid #ccc;
-  padding-left: 10px;
+  margin-left: 25px;
+  border-left: 4px solid #2d08e4;
+  padding-left: 15px;
 }
 </style>

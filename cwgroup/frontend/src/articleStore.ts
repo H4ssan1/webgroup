@@ -49,7 +49,6 @@ export const useArticleStore = defineStore('articleStore', {
       const commentMap = new Map<number, Comment>();
       const rootComments: Comment[] = [];
 
-      // First pass: Create all comment objects
       rawComments.forEach(commentData => {
         const comment: Comment = {
           ...commentData,
@@ -57,8 +56,6 @@ export const useArticleStore = defineStore('articleStore', {
         };
         commentMap.set(comment.id, comment);
       });
-
-      // Second pass: Assign replies to parents or add to root comments
       rawComments.forEach(commentData => {
         const comment = commentMap.get(commentData.id);
         if (comment && comment.parent_id) {
