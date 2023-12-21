@@ -109,6 +109,7 @@ def serve_vue_app(request):
 @login_required
 def user_details(request):
     user = request.user
+    fav_categories = list(user.profile.fav_categories.values_list('name', flat=True));
     data = {
         'username': user.username,
         'email': user.email,
@@ -116,6 +117,7 @@ def user_details(request):
         'date_of_birth': user.profile.date_of_birth,  
         'profile_image': user.profile.profile_pic.url if user.profile.profile_pic else None,  
         'id' : user.profile.id,
+        'fav_categories': fav_categories
         
     }
     return JsonResponse(data)
@@ -220,3 +222,24 @@ def update_profile_pic(request):
     profile.profile_pic = profile_pic
     profile.save()
     return JsonResponse({'message': 'Profile picture updated successfully'}, status=200)
+
+
+
+@login_required
+@csrf_exempt
+def update_fav_categories(request):
+    if request.method == 'PUT':
+        user = request.user
+        try:
+            data = json.loads(request.body)
+            profile = Profile.objects.get(user=user)
+            category_names = data.get('fav_categories', [])
+            categories = Category.objects.filter(name__in=category_names)
+            profile.fav_categories.set(categories)
+            profile.save()
+            return JsonResponse({'message': 'Favorite categories updated successfully'}, status=200)
+        except Profile.DoesNotExist:
+            return JsonResponse({'error': 'User profile not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({'error': 'Invalid request method'}, status=405)

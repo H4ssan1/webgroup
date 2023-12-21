@@ -4,47 +4,49 @@
     <div v-if="loading">Loading articles...</div>
     <div v-else>
       <div v-for="(id, index) in articleStore.ids" :key="id">
-        <h2>{{ articleStore.titles[index] }}</h2>
-        <p>{{ articleStore.contents[index] }}</p>
-        <p>Category: {{ articleStore.categories[index] }}</p>
-        <h3>Comments:</h3>
-        <div v-if="articleStore.comments[id]">
-          <div v-for="comment in articleStore.comments[id]" :key="comment.id">
-            <p>{{ comment.user }}: {{ comment.content }}</p>
-            <div v-if="userStore.username == comment.user">
-              <button @click="toggleEdit(comment.id)">Edit</button>
-              <button @click="toggleDelete(comment.id)">Delete</button>
-              <div v-if="editingComment && editingID === comment.id">
-                <editComment :content="comment.content" :id="comment.id" />
+        <div v-if="userStore.favCategories.includes(articleStore.categories[index])">
+          <h2>{{ articleStore.titles[index] }}</h2>
+          <p>{{ articleStore.contents[index] }}</p>
+          <p>Category: {{ articleStore.categories[index] }}</p>
+          <h3>Comments:</h3>
+          <div v-if="articleStore.comments[id]">
+            <div v-for="comment in articleStore.comments[id]" :key="comment.id">
+              <p>{{ comment.user }}: {{ comment.content }}</p>
+              <div v-if="userStore.username == comment.user">
+                <button @click="toggleEdit(comment.id)">Edit</button>
+                <button @click="toggleDelete(comment.id)">Delete</button>
+                <div v-if="editingComment && editingID === comment.id">
+                  <editComment :content="comment.content" :id="comment.id" />
+                </div>
+                <div v-if="deleteComment && deleteID === comment.id">
+                  <deleteComment :id="comment.id" />
+                </div>
               </div>
-              <div v-if="deleteComment && deleteID === comment.id">
-                <deleteComment :id="comment.id" />
-              </div>
-            </div>
-            <div v-if="comment.replies" class="replies">
-              <div v-for="reply in comment.replies" :key="reply.id">
-                <p>{{ reply.user }}: {{ reply.content }}</p>
-                <div v-if="userStore.username == reply.user">
-                  <button @click="toggleEdit(reply.id)">Edit Reply</button>
-                  <button @click="toggleDelete(reply.id)">Delete</button>
-                  <div v-if="editingComment && editingID === reply.id">
-                    <editComment :content="reply.content" :id="reply.id" />
-                  </div>
-                  <div v-if="deleteComment && deleteID === reply.id">
-                    <deleteComment :id="reply.id" />
+              <div v-if="comment.replies" class="replies">
+                <div v-for="reply in comment.replies" :key="reply.id">
+                  <p>{{ reply.user }}: {{ reply.content }}</p>
+                  <div v-if="userStore.username == reply.user">
+                    <button @click="toggleEdit(reply.id)">Edit Reply</button>
+                    <button @click="toggleDelete(reply.id)">Delete</button>
+                    <div v-if="editingComment && editingID === reply.id">
+                      <editComment :content="reply.content" :id="reply.id" />
+                    </div>
+                    <div v-if="deleteComment && deleteID === reply.id">
+                      <deleteComment :id="reply.id" />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <button @click="toggleReply(comment.id)">Reply</button>
-            <div v-if="replyingComment && comment.id === replyID">
-              <replyComment :parent="comment.id" :article="id" />
+              <button @click="toggleReply(comment.id)">Reply</button>
+              <div v-if="replyingComment && comment.id === replyID">
+                <replyComment :parent="comment.id" :article="id" />
+              </div>
             </div>
           </div>
-        </div>
-        <button @click="toggleAdd(id)"> Add a comment</button>
-        <div v-if="addingComment && id === addingCommentID">
-          <createComment :article=id />
+          <button @click="toggleAdd(id)"> Add a comment</button>
+          <div v-if="addingComment && id === addingCommentID">
+            <createComment :article=id />
+          </div>
         </div>
       </div>
     </div>

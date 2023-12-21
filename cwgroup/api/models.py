@@ -16,7 +16,7 @@ class User(AbstractUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    fav_categories = models.ManyToManyField('Category', blank=True)
+    fav_categories = models.ManyToManyField('Category', blank=True, default='Sports')
     
     date_of_birth = models.DateField(blank=True, default=datetime.datetime.now)
     profile_pic = models.ImageField(upload_to="profile_pic/", default="profile_pic/default.png")

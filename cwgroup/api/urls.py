@@ -43,4 +43,5 @@ urlpatterns = [
     path('article/<int:article_id>/comments/', views.get_comment, name='get_comments'),
     path('update_user_profilePic/', views.update_profile_pic, name='update_profile_pic'),
     path('update_user/', views.updateUser, name='update_user'),
+    path('update_fav_categories/', views.update_fav_categories, name='update_fav_categories'),
 ]
